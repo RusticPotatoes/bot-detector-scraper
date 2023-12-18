@@ -145,8 +145,16 @@ async def main():
 
 
 if __name__ == "__main__":
-    try:
-        loop = asyncio.get_running_loop()
-        loop.run_until_complete(main())
-    except RuntimeError:
-        asyncio.run(main())
+    # keep the loop running
+    while True:
+        # create a new event loop if the current one is closed
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        # run the main coroutine
+        try:
+            loop.run_until_complete(main())
+        except Exception as e:
+            print(f"Error occurred: {e}. Restarting event loop.")
