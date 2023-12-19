@@ -16,17 +16,20 @@ import time
 
 import pytest
 from aiohttp import ClientSession
-
 from modules.api.highscore_api import HighscoreApi
 from modules.api.runemetrics_api import RuneMetricsApi
 from modules.scraper import Scraper
 from modules.validation.player import Player, PlayerDoesNotExistException
+from dotenv import load_dotenv
 
 
 # Test lookup_hiscores with an existing player
 @pytest.mark.asyncio
 async def test_lookup_hiscores_existing_player():
-    scraper = Scraper()
+    load_dotenv()
+    proxy = os.getenv("PROXY")
+    worker_name = os.getenv("WORKER_NAME")
+    scraper = Scraper(proxy, worker_name)
     player = Player(
         id=1,
         name="extreme4all",
@@ -56,7 +59,10 @@ async def test_lookup_hiscores_existing_player():
 # Test lookup_hiscores with a non-existing player
 @pytest.mark.asyncio
 async def test_lookup_hiscores_non_existing_player():
-    scraper = Scraper()
+    load_dotenv()
+    proxy = os.getenv("PROXY")
+    worker_name = os.getenv("WORKER_NAME")
+    scraper = Scraper(proxy, worker_name)
     player = Player(
         id=1,
         name="z12rpksw9f02q",
@@ -86,7 +92,10 @@ async def test_lookup_hiscores_non_existing_player():
 
 @pytest.mark.asyncio
 async def test_rate_limit():
-    scraper = Scraper()
+    load_dotenv()
+    proxy = os.getenv("PROXY")
+    worker_name = os.getenv("WORKER_NAME")
+    scraper = Scraper(proxy, worker_name)
 
     # Save the current time before calling rate_limit
     start_time = time.time()
